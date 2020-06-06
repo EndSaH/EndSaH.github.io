@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.3.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/uploads/ic32.png?v=7.3.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/uploads/ic16.png?v=7.3.0">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.3.0" color="#222">
+
+<link rel="stylesheet" href="/css/main.css?v=7.3.0">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.3.0',
+    exturl: false,
+    sidebar: {"position":"right","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":true,"show_result":true,"style":"mac"},
+    back2top: {"enable":true,"sidebar":true,"scrollpercent":true},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="题面自己找找，loj 和洛谷上都有。">
+<meta name="keywords" content="数论,网络流">
+<meta property="og:type" content="article">
+<meta property="og:title" content="六省联考2017 题解汇总">
+<meta property="og:url" content="http://endsah.cf/blog/六省联考2017-题解汇总/index.html">
+<meta property="og:site_name" content="K-D Space">
+<meta property="og:description" content="题面自己找找，loj 和洛谷上都有。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2020-06-06T03:59:23.812Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="六省联考2017 题解汇总">
+<meta name="twitter:description" content="题面自己找找，loj 和洛谷上都有。">
+  <link rel="canonical" href="http://endsah.cf/blog/六省联考2017-题解汇总/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>六省联考2017 题解汇总 | K-D Space</title>
+  <meta name="generator" content="Hexo 3.9.0">
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">K-D Space</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">Blog</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-home">
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-about">
+      
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-tags">
+      
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-categories">
+      
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a href="javascript:;" class="popup-trigger">
+        
+          <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+      </li>
+    
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="搜索..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+            
+
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+      <article itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block post">
+    <link itemprop="mainEntityOfPage" href="http://endsah.cf/blog/六省联考2017-题解汇总/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="EndSaH">
+      <meta itemprop="description" content="Personal blog.">
+      <meta itemprop="image" content="https://s2.ax1x.com/2020/01/17/lz1STs.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="K-D Space">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">六省联考2017 题解汇总
+
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2020-06-06 11:55:39 / 修改时间：11:59:23" itemprop="dateCreated datePublished" datetime="2020-06-06T11:55:39+08:00">2020-06-06</time>
+            </span>
+          
+            
+
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/solution/" itemprop="url" rel="index"><span itemprop="name">solution</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            <span class="post-meta-item" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>题面自己找找，loj 和洛谷上都有。</p>
+<a id="more"></a>
+
+<h1 id="Day1"><a href="#Day1" class="headerlink" title="Day1"></a>Day1</h1><h2 id="T1-期末考试"><a href="#T1-期末考试" class="headerlink" title="T1 期末考试"></a>T1 期末考试</h2><p>按照题意模拟。</p>
+<h2 id="T2-相逢是问候"><a href="#T2-相逢是问候" class="headerlink" title="T2 相逢是问候"></a>T2 相逢是问候</h2><p>首先模数不是质数，所以要用扩展欧拉定理来对幂取模。</p>
+<p>扩展欧拉定理是需要讨论指数是小于 $\varphi (p)$ 还是大于等于的，需要比较麻烦的特判。</p>
+<p>如果手玩的话会发现这么一件事情：对于 $c ^{c ^{c ^{c ^{\cdots}}}}$ 这个式子而言，嵌套到了一定的层数之后这个式子的值在模意义下不会再改变（因为每次都会让上层应用上欧拉定理，而 $\varphi (\varphi(\varphi(p)))$ 在嵌套多次后会变成 $1$）。</p>
+<p>众所周知的是 $\varphi(n)$ 这个函数嵌套 $\log n$ 层就会变成 $1$。证明不展开了，分奇偶讨论即可。</p>
+<p>这样的话整个序列的势能是一定的，考虑用并查集跳过那些已经到达界，修改不再变化的点，每次暴力修改即可。</p>
+<p>由于层数 $\log n$ 层，每次修改需要 $O(\log n)$ 的快速幂，还有 $\log n$ 次修改，总复杂度 $O(n \log ^3 n)$。由于模数很少，且都是 $\varphi$ 嵌套的形式，考虑预处理好他们的根号次幂，光速幂即可做到 $O(n \log ^2 n)$。实际上直接将阈值设成 $6$ 就可以很快的跑过了。</p>
+<h2 id="T3-组合数问题"><a href="#T3-组合数问题" class="headerlink" title="T3 组合数问题"></a>T3 组合数问题</h2><p>可能这就是菜鸡的水平吧……这题没做出来。</p>
+<p>考虑要求的式子的组合意义，相当于是在 $nk$ 个数中选出个数模 $k$ 为 $r$ 的方案数。考虑组合数的原始式子，即 $f _{i, j} = f _{i - 1, j - 1} + f _{i - 1, j}$，发现这个式子放到模 $k$ 意义下就可以做出来了，直接矩幂 $O(k ^3 \log n)$。</p>
+<p>也可以考虑倍增 DP，也即 $f _{2n, i + j} \gets f _{n, i} f _{n, j}$，可以理解成讨论前 $n$ 和后 $n$ 个的选取情况。暴力卷积复杂度 $O(k ^2 \log n)$。</p>
+<p>当然这里也可以用生成函数的方式来解释这个倍增 DP。可以去看洛谷上的题解。</p>
+<h1 id="Day2"><a href="#Day2" class="headerlink" title="Day2"></a>Day2</h1><h2 id="T1-摧毁树状图"><a href="#T1-摧毁树状图" class="headerlink" title="T1 摧毁树状图"></a>T1 摧毁树状图</h2><p>坑分类讨论题。</p>
+<p>首先连通块数等于点数减边数，也就相当于找到两条链使得边数减点数最大。</p>
+<p>先踢掉两条链相交于一点的情况不考虑，考虑不相交的情况。可以发现对于一个子树而言答案有 4 种情况：</p>
+<ol>
+<li>答案不经过根，展开得到两种。</li>
+<li>答案经过根，展开得到两种，并且还要求出一个点到其子树内延伸一条链加上其子树内另一条链的最大值。这个也要讨论起来维护。</li>
+</ol>
+<p>相交的就枚举交点，两条链要么出子树要么不出。如果出了就换根一下得到到子树外的链的最优答案，没出就相当于选四个最大的链拼起来。</p>
+<p>注意一个很坑的地方。一开始自己推的式子是对于两条单独的链而言的，为 $\sum _{i = 1} ^m d _i - 2m + 1$。但是在两条链有公共边（指的是每个点连出去的边）的情况下，把这个式子加起来的时侯要减 $1$，三条链减 $2$，依此类推。要着重注意这种情况的判断。</p>
+<p>可以做到 $O(n)$，偷懒用了 <code>std::multiset</code> 变成了 $O(n \log n)$。<del>这种 shit 题考场上真的码的完吗</del></p>
+<h2 id="T2-分手是祝愿"><a href="#T2-分手是祝愿" class="headerlink" title="T2 分手是祝愿"></a>T2 分手是祝愿</h2><p>首先要发现一个很重要的性质：如果将按下每个灯所带来的影响写成一个长度为 $n$ 的 $01$ 向量，可以发现这些向量是线性无关的，也就是按一个灯不能被其他灯的组合表示出来。</p>
+<p>要证明倒是很简单。容易知道任意长度为 $n$ 的 $01$ 序列都可以被他们表示出来，考虑如下方式：</p>
+<blockquote>
+<p>从后往前遍历，遇到 $0$ 不管，遇到 $1$ 将其约数位置异或上 $1$。</p>
+</blockquote>
+<p>于是他们的张成大小为 $O(2 ^n)$，又因为只有 $n$ 个向量，所以这 $n$ 个向量一定线性无关。</p>
+<p>由此也可以得到这个方式得出来的就是最小的操作次数。于是设 $f _i$ 表示一个要操作 $i$ 次的序列，期望要多少次才能到 $i - 1$ 次的序列。有转移：</p>
+<p>$$<br>f _i = \frac i n + \frac {n - i} n (f _i + f _{i + 1} + 1)<br>$$</p>
+<p>移项之后递推即可。$O(n \log n)$，因为要枚举约数算出一开始的序列的操作次数。</p>
+<h2 id="T3-寿司餐厅"><a href="#T3-寿司餐厅" class="headerlink" title="T3 寿司餐厅"></a>T3 寿司餐厅</h2><p>好像是一道偏简单的网络流？本来因为 T1 的关系看这题的时间就很少，加上对网络流不熟练，打个暴力走人还算正常。</p>
+<p>需要注意到题意里面一些特别诡异的地方：每个收益只会被获得一次，每个点的代价也只会被消耗一次，再加上这些权值正负不定，这些条件直接把 DP 限制死了。</p>
+<p>看到数据范围，可以考虑用网络流来解决这个问题。</p>
+<p>先考虑抽象出来一个模型。可以发现，如果选择了一个区间 $[i, j]$，那么其子区间内的收益和代价都会被选中，可以回忆起一个重要的模型：最大权闭合子图。</p>
+<blockquote>
+<p>最大权闭合子图：给定一个 $n$ 点 $m$ 边的有向图，点有点权，选出一个点集，满足这个点集的所有出边所指向的点都在点集内（也就是「闭合」子图），最大化选的点权和。</p>
+<p>最优的情况是将大于 $0$ 的点权全部选中，但是这种方案不一定合法。考虑用最小割来调整最优方案。</p>
+<p>如果一个点点权小于 $0$，向汇点 $T$ 连流量为 $-a _i$ 的边；否则从源点向其连流量为 $a _i$ 的边。割掉了分别表示不选和选。其他的边建流量为 INF 的边，表示不准割。</p>
+<p>用所有大于 $0$ 的点权减去最小割就是答案。</p>
+</blockquote>
+<p>每一个区间都代表一个点，$[i, j]$ 向 $[i + 1, j], [i, j - 1]$ 连边表示强制选择，然后 $[i, i]$ 单独向 $a _i$ 这个类型连边，因为 $a _i$ 这个类型被选会单独带来 $a _i ^2$ 的代价。</p>
+<p>然后跑最大权闭合子图即可。</p>
+
+    </div>
+
+    
+    
+    
+        
+      
+
+      <footer class="post-footer">
+          
+            
+          
+          <div class="post-tags">
+            
+              <a href="/tags/数论/" rel="tag"><i class="fa fa-tags"></i> 数论</a>
+            
+              <a href="/tags/网络流/" rel="tag"><i class="fa fa-tags"></i> 网络流</a>
+            
+          </div>
+        
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/blog/拉格朗日插值法/" rel="next" title="拉格朗日插值法">
+                  <i class="fa fa-chevron-left"></i> 拉格朗日插值法
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+    
+    <div class="comments" id="gitalk-container"></div>
+  
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+        
+        
+        
+        
+      
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Day1"><span class="nav-number">1.</span> <span class="nav-text">Day1</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#T1-期末考试"><span class="nav-number">1.1.</span> <span class="nav-text">T1 期末考试</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#T2-相逢是问候"><span class="nav-number">1.2.</span> <span class="nav-text">T2 相逢是问候</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#T3-组合数问题"><span class="nav-number">1.3.</span> <span class="nav-text">T3 组合数问题</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Day2"><span class="nav-number">2.</span> <span class="nav-text">Day2</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#T1-摧毁树状图"><span class="nav-number">2.1.</span> <span class="nav-text">T1 摧毁树状图</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#T2-分手是祝愿"><span class="nav-number">2.2.</span> <span class="nav-text">T2 分手是祝愿</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#T3-寿司餐厅"><span class="nav-number">2.3.</span> <span class="nav-text">T3 寿司餐厅</span></a></li></ol></li></ol></div>
+        
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image"
+      src="https://s2.ax1x.com/2020/01/17/lz1STs.png"
+      alt="EndSaH">
+  <p class="site-author-name" itemprop="name">EndSaH</p>
+  <div class="site-description" itemprop="description">Personal blog.</div>
+</div>
+  <nav class="site-state motion-element">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">35</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+          
+            <a href="/categories/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+          
+            <a href="/tags/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">40</span>
+        <span class="site-state-item-name">标签</span>
+        </a>
+      </div>
+    
+  </nav>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://github.com/EndSaH" title="GitHub &rarr; https://github.com/EndSaH" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://www.zhihu.com/people/endsah" title="知乎 &rarr; https://www.zhihu.com/people/endsah" rel="noopener" target="_blank"><i class="fa fa-fw fa-comment"></i>知乎</a>
+      </span>
+    
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title">
+      <i class="fa fa-fw fa-link"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://www.cnblogs.com/cnyali-Tea/" title="https://www.cnblogs.com/cnyali-Tea/" rel="noopener" target="_blank">Tea</a>
+        </li>
+      
+        <li class="links-of-blogroll-item">
+          <a href="https://gongchen618.gitee.io/blog/" title="https://gongchen618.gitee.io/blog/" rel="noopener" target="_blank">GC</a>
+        </li>
+      
+        <li class="links-of-blogroll-item">
+          <a href="https://www.cnblogs.com/Qrsikno/" title="https://www.cnblogs.com/Qrsikno/" rel="noopener" target="_blank">Qrsikno</a>
+        </li>
+      
+        <li class="links-of-blogroll-item">
+          <a href="https://www.cnblogs.com/xunzhen/" title="https://www.cnblogs.com/xunzhen/" rel="noopener" target="_blank">Xunzhen</a>
+        </li>
+      
+        <li class="links-of-blogroll-item">
+          <a href="https://hk-cnyali.com/" title="https://hk-cnyali.com/" rel="noopener" target="_blank">HK</a>
+        </li>
+      
+        <li class="links-of-blogroll-item">
+          <a href="http://oi.ender-zzm.pro/" title="http://oi.ender-zzm.pro/" rel="noopener" target="_blank">Ender_zzm</a>
+        </li>
+      
+    </ul>
+  </div>
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+      
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2019 – <span itemprop="copyrightYear">2020</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-chrome"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">EndSaH</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0</div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.3.0</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-user"></i>
+    </span>
+    <span class="site-uv" title="总访客量">
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+    <span class="post-meta-divider">|</span>
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-eye"></i>
+    </span>
+    <span class="site-pv" title="总访问量">
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+
+
+  <script src="/lib/anime.min.js?v=3.1.0"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+<script src="/js/utils.js?v=7.3.0"></script><script src="/js/motion.js?v=7.3.0"></script>
+<script src="/js/schemes/pisces.js?v=7.3.0"></script>
+
+<script src="/js/next-boot.js?v=7.3.0"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+  <script src="/js/local-search.js?v=7.3.0"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+    
+      
+<script type="text/x-mathjax-config">
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') {
+          next = next.nextSibling;
+        }
+        if (next && next.nodeName.toLowerCase() === 'br') {
+          next.parentNode.removeChild(next);
+        }
+      }
+    });
+  });
+
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
+      if (element.nodeName.toLowerCase() == 'li') {
+        element = element.parentNode;
+      }
+      element.classList.add('has-jax');
+    }
+  });
+</script>
+<script>
+  NexT.utils.getScript('//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
+    MathJax.Hub.Typeset();
+  }, window.MathJax);
+</script>
+
+    
+  
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID: '94016d5cd6f01b4f9e29',
+      clientSecret: '949f197123c4eb202cc31a3736b15c5d0490f00a',
+      repo: 'EndSaH.github.io',
+      owner: 'EndSaH',
+      admin: ['EndSaH'],
+      id: '182267dac6b0fddfabe78e3768728474',
+        language: 'zh-CN',
+      
+      distractionFreeMode: 'true'
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+</script>
+
+</body>
+</html>

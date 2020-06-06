@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.3.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/uploads/ic32.png?v=7.3.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/uploads/ic16.png?v=7.3.0">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.3.0" color="#222">
+
+<link rel="stylesheet" href="/css/main.css?v=7.3.0">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.3.0',
+    exturl: false,
+    sidebar: {"position":"right","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":true,"show_result":true,"style":"mac"},
+    back2top: {"enable":true,"sidebar":true,"scrollpercent":true},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="Description给定一个小写字符串 $s$。问有多少个不同的长度为 $m$ 的串 $t$，满足将 $t$ 无限重复之后，可以从中找出一个长度与 $s$ 相同且字典序小于 $s$ 的串。 设 $s$ 长度为 $n$，则满足$$1 \le n, m \le 2000$$">
+<meta name="keywords" content="计数,KMP 自动机">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[CTS2019]重复">
+<meta property="og:url" content="http://endsah.cf/blog/CTS2019-重复/index.html">
+<meta property="og:site_name" content="K-D Space">
+<meta property="og:description" content="Description给定一个小写字符串 $s$。问有多少个不同的长度为 $m$ 的串 $t$，满足将 $t$ 无限重复之后，可以从中找出一个长度与 $s$ 相同且字典序小于 $s$ 的串。 设 $s$ 长度为 $n$，则满足$$1 \le n, m \le 2000$$">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://endsah.cf/uploads/pic/o_%E6%97%A0%E6%A0%87%E9%A2%98.png">
+<meta property="og:updated_time" content="2019-09-01T13:23:12.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="[CTS2019]重复">
+<meta name="twitter:description" content="Description给定一个小写字符串 $s$。问有多少个不同的长度为 $m$ 的串 $t$，满足将 $t$ 无限重复之后，可以从中找出一个长度与 $s$ 相同且字典序小于 $s$ 的串。 设 $s$ 长度为 $n$，则满足$$1 \le n, m \le 2000$$">
+<meta name="twitter:image" content="http://endsah.cf/uploads/pic/o_%E6%97%A0%E6%A0%87%E9%A2%98.png">
+  <link rel="canonical" href="http://endsah.cf/blog/CTS2019-重复/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>[CTS2019]重复 | K-D Space</title>
+  <meta name="generator" content="Hexo 3.9.0">
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">K-D Space</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">Blog</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-home">
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-about">
+      
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-tags">
+      
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-categories">
+      
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a href="javascript:;" class="popup-trigger">
+        
+          <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+      </li>
+    
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="搜索..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+            
+
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+      <article itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block post">
+    <link itemprop="mainEntityOfPage" href="http://endsah.cf/blog/CTS2019-重复/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="EndSaH">
+      <meta itemprop="description" content="Personal blog.">
+      <meta itemprop="image" content="https://s2.ax1x.com/2020/01/17/lz1STs.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="K-D Space">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">[CTS2019]重复
+
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2019-09-01 21:22:06 / 修改时间：21:23:12" itemprop="dateCreated datePublished" datetime="2019-09-01T21:22:06+08:00">2019-09-01</time>
+            </span>
+          
+            
+
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/solution/" itemprop="url" rel="index"><span itemprop="name">solution</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            <span class="post-meta-item" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="Description"><a href="#Description" class="headerlink" title="Description"></a>Description</h1><p>给定一个小写字符串 $s$。问有多少个不同的长度为 $m$ 的串 $t$，满足将 $t$ 无限重复之后，可以从中找出一个长度与 $s$ 相同且字典序小于 $s$ 的串。</p>
+<p>设 $s$ 长度为 $n$，则满足<br>$$<br>1 \le n, m \le 2000<br>$$</p>
+<a id="more"></a>
+
+<h1 id="Solution"><a href="#Solution" class="headerlink" title="Solution"></a>Solution</h1><p>正难则反，考虑对不满足上面条件的串计数。</p>
+<p>不满足条件等价于将 $t$ 无限重复之后任意长度为 $n$ 的子串字典序均大于等于 $s$。</p>
+<p>下文中称不满足条件的为<strong>合法</strong>串。注意定义与题目定义相反。</p>
+<p>考虑建一个自动机用来唯一接受这些合法串。</p>
+<p>对 $s$ 建 KMP 自动机。如果你不知道可以脑补一下补边的 AC 自动机只有一个模式串的样子，就是补齐了 26 条转移边的那种。</p>
+<p>首先需要明确 KMP 自动机原本的作用。把一个文本串放到 $s$ 所建立的 KMP 自动机上跑，跑到的节点代表的意义是文本串的后缀与 $s$ 的前缀的最长匹配。这个节点便代表了 $s$ 的那个前缀。</p>
+<p>考虑有了字典序的限制之后，这个 KMP 自动机该如何变化。</p>
+<p>结论：<strong>一个节点不是到根的转移边中，只能保留字符最大的那条</strong>，并且字符比这条小的到根的也不能保留。</p>
+<p>假设当前匹配到的前缀节点字符最大的那条转移边为 <code>&#39;k&#39;</code>。那么这个前缀节点表示的串应该是这个样子：<code>str + &#39;k&#39; + ?? + str</code>。<code>str</code> 表示相同的前缀后缀，<code>??</code> 表示中间一堆乱七八糟的字符串。</p>
+<p>比如当前匹配到 <code>akabaka</code> 这个前缀节点，其 <code>&#39;k&#39;</code> 边最大，表示出来就是 <code>&quot;a&quot; + &#39;k&#39; + &quot;abak&quot; + &quot;a&quot;</code>。自动对应上 <code>str</code> 和 <code>??</code> 就行。</p>
+<p>假如现在走了一条比 <code>&#39;k&#39;</code> 小的转移边。那么用 <code>str</code> 拼上这个字符，便可以得到一个字典序比 <code>str + &#39;k&#39;</code> 小的串，那么以这个串为开头的串就会比 $s$ 小，所以不合法。</p>
+<p>在删掉一些边之后，可以保证在这个自动机上跑出来的字符串都是合法的了。现在考虑怎样对这种合法的字符串计数。</p>
+<p>因为这个字符串可以无限重复，也就是说这个字符串一定在这个自动机的环上一直绕。</p>
+<p>…从一个节点出发长度为 $m$ 的环？</p>
+<p>现在考虑一个合法的字符串 $t$，并先假设 $n &lt; m$。</p>
+<p>那么把 $t$ 放到这个删边之后的自动机上跑，<strong>跑完所到的点应当与删边之前跑完所到的点一样</strong>。作为一个合法的字符串，它所走的转移边都没有被删掉。</p>
+<p>删边之前是一个 $s$ 所建的 KMP 自动机，所以这个节点所代表的前缀应当是最长的与 $t$ 的某个后缀能匹配的前缀。</p>
+<p>因为 $n &lt; m$，所以再接一个 $t$ 串之后，$t + t$ 与 $s$ 的<strong>能匹配的最长后前缀不变</strong>。所以再走一次 $t$，仍会走到相同的节点去。</p>
+<p>所以当 $n &lt; m$ 时，一个合法的 $t$ 一定是从一个节点出发走一个长度为 $m$ 的环然后回到这个节点。</p>
+<p>$n \ge m$ 同理。匹配时会先走到几个零散的点，直到用 $t + t + t + \cdots$ 拼出的串长度大于 $s$ 时，又会是从一个点走 $m$ 步的环回到这个点。</p>
+<p>起点一样走的边不同一定对应了不同的字符串，那么还需要证明没有两个长度为 $m$，起点不一对应字符串却完全一样的环。这很好证，因为一个合法 $t$ 只可能在 KMP 自动机上对应一个前缀节点，这种情况相当于 $t$ 对应了两个前缀节点，这是不现实的。</p>
+<p>于是现在问题变成：在一个只保留一条转移边的 KMP 自动机上计算从每个节点出发长度为 $m$ 的环。</p>
+<p>因为这个 KMP 自动机形状比较特殊，一个节点只有一条出边和若干条到根的边，大概长成这样：</p>
+<p><img src="/uploads/pic/o_%E6%97%A0%E6%A0%87%E9%A2%98.png" alt></p>
+<p>$\rho$ 的样子。当然后面还有一些节点，但是与根不连通，省略了。<del>如果你觉得基环内向树好理解也可以按基环内向树理解</del>。</p>
+<p>于是设 $f(i, j)$ 表根走 $i$ 步到 $j$ 的方案数，$g(i, j)$ 表 $j$ 走 $i$ 步到根的方案数，有转移：<br>$$<br>f(i + 1, v) \gets f(i, u) \\<br>f(i + 1, 0) \gets f(i, u) \times edge _u \\<br>g(i + 1, u) \gets g(i, v)<br>$$<br>$edge _i$ 表示 $i$ 出发到根的那些转移边。注意 $g$ 的转移保证仅经过一次根节点，所以不会算重。</p>
+<p>最后枚举走 $j$ 步到根，自然就走 $m - j$ 步再到自己，方案数相乘即可。</p>
+<p>再看 $\rho$ 的那个环的大小是否为 $m$ 的约数，如果是，加上环的大小。</p>
+<p>再用 $26 ^m$ 减去即得到答案。</p>
+<p>生成函数的到时候再更。</p>
+<h1 id="Code"><a href="#Code" class="headerlink" title="Code"></a>Code</h1><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;cstdio&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;cstring&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="keyword">using</span> LL = <span class="keyword">long</span> <span class="keyword">long</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> maxN = <span class="number">2e3</span> + <span class="number">5</span>;</span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> mod = <span class="number">998244353</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> n, m, circle_len, ans;</span><br><span class="line"><span class="keyword">char</span> str[maxN];</span><br><span class="line"><span class="keyword">int</span> edge[maxN], v[maxN], fail[maxN], dep[maxN];</span><br><span class="line"><span class="keyword">bool</span> vis[maxN];</span><br><span class="line"><span class="keyword">int</span> f[maxN][maxN], g[maxN][maxN];</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">inline</span> <span class="keyword">void</span> <span class="title">Mod</span><span class="params">(<span class="keyword">int</span>&amp; x)</span></span></span><br><span class="line"><span class="function"></span>&#123; x &gt;= mod ? x -= mod : x &lt; <span class="number">0</span> ? x += mod : <span class="number">0</span>; &#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">QPow</span><span class="params">(<span class="keyword">int</span> bas, <span class="keyword">int</span> ind)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> res = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">while</span> (ind)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (ind &amp; <span class="number">1</span>)</span><br><span class="line">            res = (LL)res * bas % mod;</span><br><span class="line">        bas = (LL)bas * bas % mod;</span><br><span class="line">        ind &gt;&gt;= <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">DFS</span><span class="params">(<span class="keyword">int</span> u)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    vis[u] = <span class="literal">true</span>;</span><br><span class="line">    <span class="keyword">if</span> (vis[v[u]])</span><br><span class="line">        circle_len = dep[u] - dep[v[u]] + <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        dep[v[u]] = dep[u] + <span class="number">1</span>, DFS(v[u]);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">ifndef</span> ONLINE_JUDGE</span></span><br><span class="line">    freopen(<span class="string">"wib.in"</span>, <span class="string">"r"</span>, <span class="built_in">stdin</span>);</span><br><span class="line">    freopen(<span class="string">"wib.out"</span>, <span class="string">"w"</span>, <span class="built_in">stdout</span>);</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line">    <span class="built_in">cin</span> &gt;&gt; m &gt;&gt; (str + <span class="number">1</span>);</span><br><span class="line">    n = <span class="built_in">strlen</span>(str + <span class="number">1</span>);</span><br><span class="line">    fail[<span class="number">1</span>] = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">2</span>, j = <span class="number">0</span>; i &lt;= n; ++i)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">while</span> (j <span class="keyword">and</span> str[j + <span class="number">1</span>] != str[i])</span><br><span class="line">            j = fail[j];</span><br><span class="line">        <span class="keyword">if</span> (str[j + <span class="number">1</span>] == str[i])</span><br><span class="line">            fail[i] = ++j;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt;= n; ++i)</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">25</span>; ~j; --j)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">int</span> pos = i;</span><br><span class="line">            <span class="keyword">while</span> (pos <span class="keyword">and</span> str[pos + <span class="number">1</span>] != j + <span class="string">'a'</span>) <span class="comment">// when pos = n, false</span></span><br><span class="line">                pos = fail[pos];</span><br><span class="line">            <span class="keyword">if</span> (str[pos + <span class="number">1</span>] == j + <span class="string">'a'</span>)</span><br><span class="line">                ++pos;</span><br><span class="line">            <span class="keyword">if</span> (pos)</span><br><span class="line">            &#123;</span><br><span class="line">                v[i] = pos;</span><br><span class="line">                edge[i] = <span class="number">25</span> - j;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    f[<span class="number">0</span>][<span class="number">0</span>] = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; m; ++i)</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt;= n; ++j)</span><br><span class="line">        &#123;</span><br><span class="line">            Mod(f[i + <span class="number">1</span>][v[j]] += f[i][j]);</span><br><span class="line">            Mod(f[i + <span class="number">1</span>][<span class="number">0</span>] += (LL)f[i][j] * edge[j] % mod);</span><br><span class="line">        &#125;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt;= n; ++i)</span><br><span class="line">        g[<span class="number">1</span>][i] = edge[i];</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">2</span>; i &lt;= m; ++i)</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt;= n; ++j)</span><br><span class="line">            g[i][j] = g[i - <span class="number">1</span>][v[j]];</span><br><span class="line">    DFS(<span class="number">0</span>);</span><br><span class="line">    <span class="keyword">if</span> (m % circle_len == <span class="number">0</span>)</span><br><span class="line">        ans = circle_len;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt;= n; ++i)</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt;= m; ++j)</span><br><span class="line">            Mod(ans += (LL)g[j][i] * f[m - j][i] % mod);</span><br><span class="line">    Mod(ans = QPow(<span class="number">26</span>, m) - ans);</span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; ans &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+    </div>
+
+    
+    
+    
+        
+      
+
+      <footer class="post-footer">
+          
+            
+          
+          <div class="post-tags">
+            
+              <a href="/tags/计数/" rel="tag"><i class="fa fa-tags"></i> 计数</a>
+            
+              <a href="/tags/KMP-自动机/" rel="tag"><i class="fa fa-tags"></i> KMP 自动机</a>
+            
+          </div>
+        
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/blog/CF1188D-Make-Equal/" rel="next" title="[CF1188D]Make Equal">
+                  <i class="fa fa-chevron-left"></i> [CF1188D]Make Equal
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+                <a href="/blog/NOIP2015-运输计划/" rel="prev" title="[NOIP2015]运输计划">
+                  [NOIP2015]运输计划 <i class="fa fa-chevron-right"></i>
+                </a>
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+    
+    <div class="comments" id="gitalk-container"></div>
+  
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+        
+        
+        
+        
+      
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Description"><span class="nav-number">1.</span> <span class="nav-text">Description</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Solution"><span class="nav-number">2.</span> <span class="nav-text">Solution</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Code"><span class="nav-number">3.</span> <span class="nav-text">Code</span></a></li></ol></div>
+        
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image"
+      src="https://s2.ax1x.com/2020/01/17/lz1STs.png"
+      alt="EndSaH">
+  <p class="site-author-name" itemprop="name">EndSaH</p>
+  <div class="site-description" itemprop="description">Personal blog.</div>
+</div>
+  <nav class="site-state motion-element">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">35</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+          
+            <a href="/categories/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+          
+            <a href="/tags/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">40</span>
+        <span class="site-state-item-name">标签</span>
+        </a>
+      </div>
+    
+  </nav>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://github.com/EndSaH" title="GitHub &rarr; https://github.com/EndSaH" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://www.zhihu.com/people/endsah" title="知乎 &rarr; https://www.zhihu.com/people/endsah" rel="noopener" target="_blank"><i class="fa fa-fw fa-comment"></i>知乎</a>
+      </span>
+    
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title">
+      <i class="fa fa-fw fa-link"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://www.cnblogs.com/cnyali-Tea/" title="https://www.cnblogs.com/cnyali-Tea/" rel="noopener" target="_blank">Tea</a>
+        </li>
+      
+        <li class="links-of-blogroll-item">
+          <a href="https://gongchen618.gitee.io/blog/" title="https://gongchen618.gitee.io/blog/" rel="noopener" target="_blank">GC</a>
+        </li>
+      
+        <li class="links-of-blogroll-item">
+          <a href="https://www.cnblogs.com/Qrsikno/" title="https://www.cnblogs.com/Qrsikno/" rel="noopener" target="_blank">Qrsikno</a>
+        </li>
+      
+        <li class="links-of-blogroll-item">
+          <a href="https://www.cnblogs.com/xunzhen/" title="https://www.cnblogs.com/xunzhen/" rel="noopener" target="_blank">Xunzhen</a>
+        </li>
+      
+        <li class="links-of-blogroll-item">
+          <a href="https://hk-cnyali.com/" title="https://hk-cnyali.com/" rel="noopener" target="_blank">HK</a>
+        </li>
+      
+        <li class="links-of-blogroll-item">
+          <a href="http://oi.ender-zzm.pro/" title="http://oi.ender-zzm.pro/" rel="noopener" target="_blank">Ender_zzm</a>
+        </li>
+      
+    </ul>
+  </div>
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+      
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2019 – <span itemprop="copyrightYear">2020</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-chrome"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">EndSaH</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0</div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.3.0</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-user"></i>
+    </span>
+    <span class="site-uv" title="总访客量">
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+    <span class="post-meta-divider">|</span>
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-eye"></i>
+    </span>
+    <span class="site-pv" title="总访问量">
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+
+
+  <script src="/lib/anime.min.js?v=3.1.0"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+<script src="/js/utils.js?v=7.3.0"></script><script src="/js/motion.js?v=7.3.0"></script>
+<script src="/js/schemes/pisces.js?v=7.3.0"></script>
+
+<script src="/js/next-boot.js?v=7.3.0"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+  <script src="/js/local-search.js?v=7.3.0"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+    
+      
+<script type="text/x-mathjax-config">
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') {
+          next = next.nextSibling;
+        }
+        if (next && next.nodeName.toLowerCase() === 'br') {
+          next.parentNode.removeChild(next);
+        }
+      }
+    });
+  });
+
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
+      if (element.nodeName.toLowerCase() == 'li') {
+        element = element.parentNode;
+      }
+      element.classList.add('has-jax');
+    }
+  });
+</script>
+<script>
+  NexT.utils.getScript('//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
+    MathJax.Hub.Typeset();
+  }, window.MathJax);
+</script>
+
+    
+  
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID: '94016d5cd6f01b4f9e29',
+      clientSecret: '949f197123c4eb202cc31a3736b15c5d0490f00a',
+      repo: 'EndSaH.github.io',
+      owner: 'EndSaH',
+      admin: ['EndSaH'],
+      id: '22b59979a14c98ce23b77e5a03291e78',
+        language: 'zh-CN',
+      
+      distractionFreeMode: 'true'
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+</script>
+
+</body>
+</html>

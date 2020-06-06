@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.3.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/uploads/ic32.png?v=7.3.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/uploads/ic16.png?v=7.3.0">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.3.0" color="#222">
+
+<link rel="stylesheet" href="/css/main.css?v=7.3.0">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.3.0',
+    exturl: false,
+    sidebar: {"position":"right","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":true,"show_result":true,"style":"mac"},
+    back2top: {"enable":true,"sidebar":true,"scrollpercent":true},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="Description有 $n$ 堆石子，$m$ 次操作。第 $i$ 次操作是在 $[l, r]$ 这堆石子中选出至多 $k$ 个石子扔掉。问在保证前 $i - 1$ 次操作全部最优（即扔掉石子最多）的前提下，第 $i$ 次操作最多能扔出多少石子。 操作区间互不包含。 设 $a _i$ 表第 $i$ 堆石子数目，则有： $$1 \le m \le n \le 40000, 1 \le a _i \">
+<meta name="keywords" content="线段树,Hall 定理">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[BZOJ2138]stone">
+<meta property="og:url" content="http://endsah.cf/blog/BZOJ2138-stone/index.html">
+<meta property="og:site_name" content="K-D Space">
+<meta property="og:description" content="Description有 $n$ 堆石子，$m$ 次操作。第 $i$ 次操作是在 $[l, r]$ 这堆石子中选出至多 $k$ 个石子扔掉。问在保证前 $i - 1$ 次操作全部最优（即扔掉石子最多）的前提下，第 $i$ 次操作最多能扔出多少石子。 操作区间互不包含。 设 $a _i$ 表第 $i$ 堆石子数目，则有： $$1 \le m \le n \le 40000, 1 \le a _i \">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-10-31T12:54:05.923Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="[BZOJ2138]stone">
+<meta name="twitter:description" content="Description有 $n$ 堆石子，$m$ 次操作。第 $i$ 次操作是在 $[l, r]$ 这堆石子中选出至多 $k$ 个石子扔掉。问在保证前 $i - 1$ 次操作全部最优（即扔掉石子最多）的前提下，第 $i$ 次操作最多能扔出多少石子。 操作区间互不包含。 设 $a _i$ 表第 $i$ 堆石子数目，则有： $$1 \le m \le n \le 40000, 1 \le a _i \">
+  <link rel="canonical" href="http://endsah.cf/blog/BZOJ2138-stone/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>[BZOJ2138]stone | K-D Space</title>
+  <meta name="generator" content="Hexo 3.9.0">
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">K-D Space</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">Blog</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-home">
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-about">
+      
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-tags">
+      
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-categories">
+      
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a href="javascript:;" class="popup-trigger">
+        
+          <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+      </li>
+    
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="搜索..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+            
+
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+      <article itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block post">
+    <link itemprop="mainEntityOfPage" href="http://endsah.cf/blog/BZOJ2138-stone/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="EndSaH">
+      <meta itemprop="description" content="Personal blog.">
+      <meta itemprop="image" content="https://s2.ax1x.com/2020/01/17/lz1STs.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="K-D Space">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">[BZOJ2138]stone
+
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2019-09-02 20:31:06" itemprop="dateCreated datePublished" datetime="2019-09-02T20:31:06+08:00">2019-09-02</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2019-10-31 20:54:05" itemprop="dateModified" datetime="2019-10-31T20:54:05+08:00">2019-10-31</time>
+              </span>
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/solution/" itemprop="url" rel="index"><span itemprop="name">solution</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            <span class="post-meta-item" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="Description"><a href="#Description" class="headerlink" title="Description"></a>Description</h1><p>有 $n$ 堆石子，$m$ 次操作。第 $i$ 次操作是在 $[l, r]$ 这堆石子中选出至多 $k$ 个石子扔掉。问在保证前 $i - 1$ 次操作全部最优（即扔掉石子最多）的前提下，第 $i$ 次操作最多能扔出多少石子。</p>
+<p><strong>操作区间互不包含</strong>。</p>
+<p>设 $a _i$ 表第 $i$ 堆石子数目，则有：</p>
+<p>$$<br>1 \le m \le n \le 40000, 1 \le a _i \le 500<br>$$</p>
+<a id="more"></a>
+
+<h1 id="Solution"><a href="#Solution" class="headerlink" title="Solution"></a>Solution</h1><p>比较巧妙的一道题…</p>
+<p>操作之间互有影响，说明这不是一道简单的数据结构题，处理起来很麻烦。</p>
+<p>看到 $a _i$ 的数据范围比较小，先考虑建立一个二分图匹配的模型：左部为石子，每堆石子拆为 $a _i$ 个石子，右部为操作，每次操作都相当于加入了 $k$ 个右部节点，这些右部节点每个节点均向那些所属堆在 $[l, r]$ 之内的石子连边。</p>
+<p>问题变为在前面匹配数量不变的情况下，当前这些新加节点所能匹配的最大数量。</p>
+<p><del>网络流 + 线段树优化建边思博题</del>这样复杂度太高了撑不住。</p>
+<p>先想想前面的操作都能把其对应区间内石子全部扔掉的情况，也就相当于是<strong>完全匹配</strong>。</p>
+<p>看到这个东西应该有一个敏感度：Hall 定理！</p>
+<p>如果不知道这里介绍一下：</p>
+<blockquote>
+<p>Hall 定理：若二分图 $G = (S \cup T, E)$（不妨设 $|S| \le |T|$）满足任取 $S$ 子集 $X$ 均满足：对于与 $X$ 相邻（即与 $X$ 中节点有直接连边的 $T$ 部节点）的集合 $Y$，有 $|X| \le |Y|$，则二分图 $G$ 有完全匹配。</p>
+</blockquote>
+<p>证明很简单：</p>
+<blockquote>
+<p>考虑反证。假设存在一个满足上述条件的二分图，且其最大匹配非完全匹配。</p>
+<p>那么左部肯定存在一个未匹配的点 $x$。根据 $|X| \le |Y|$，它至少和右部的一个点 $y$ 有连边。</p>
+<p>若 $y$ 没匹配过，那么 $x$ 和 $y$ 可以匹配，矛盾。</p>
+<p>若 $y$ 已有匹配，设 $y$ 和左边的 $z$ 点匹配，根据 $|X| \le |Y|$，点集 ${x, z}$ 与右边至少有两个点有连边，设除了 $y$ 之外的那个点为 $p$。</p>
+<p>再对 $p$ 进行类似讨论，递归地得到一定会存在一条增广路。这与最大匹配的定义矛盾，故得证。</p>
+</blockquote>
+<p>在这题里并不需要考虑子集，只需要考虑连续堆即可，反正每 $k$ 个右部节点都会向同样的石子连边。</p>
+<p>回顾一下之前的话：</p>
+<blockquote>
+<p>在保证前面完全匹配的情况下最优化当前答案。</p>
+</blockquote>
+<p>也就是要在加入 $k$ 个右部节点之后任取左部区间（石子堆）$[i, j]$，均满足被这个区间 $[i, j]$ 所<strong>包含</strong>的那些操作的 $k$ 的总和比其小。</p>
+<blockquote>
+<p>为什么要被 $[i, j]$ 包含？不是与 $[i, j]$ 中的某个点有连边（也就是相交）就行了么？</p>
+<p>考虑 Hall 定理的原意是枚举大小更小方（也就是右部节点）的集合，再统计与其相邻的左部集合的大小。这里反过来枚举左部区间，可以知道<strong>在原来的枚举中，那些产生贡献的左部区间都会完全包含枚举的那些右部节点</strong>。所以对于枚举的一个左部区间，只需统计那些被其包含的操作，相交的那些会被其他区间统计。</p>
+</blockquote>
+<p>记 $s _i$ 为右端点 $\le i$ 的操作的 $k$ 的和，$p _i$ 为左端点 $\le i$ 的操作的 $k$ 的和。</p>
+<p>上述条件等价于：（<strong>操作区间互不包含</strong>）</p>
+<p>$$<br>\forall 1 \le i \le j \le n, \sum _{l = i} ^j a _i \ge s _j - p _{i - 1}<br>$$</p>
+<p>记 $S _i$ 表示 $\sum \limits _{j = 1} ^i a _j$，则有：</p>
+<p>$$<br>S _j - S _{i - 1} \ge s _j - p _{i - 1} \\<br>S _j - s _j \ge S _{i - 1} - p _{i - 1}<br>$$</p>
+<p>再记 $f(i) = S _i - s _i, g(i) = S _i - p _i$，上式等价于</p>
+<p>$$<br>\forall 1 \le i \le j \le n, f(j) - g(i - 1) \ge 0<br>$$</p>
+<p>留意 $f, g$ 是动态变化的。</p>
+<p>再考虑当前增加了一个操作 $(l, r, k)$ 的影响。</p>
+<p><strong>注意：从此开始 $k$ 改变意义，变为满足条件的情况下当前操作最多能扔掉的石子数</strong>。可以看作只加入了这 $k$ 个右部节点，其他的直接删除，反正不会影响答案。</p>
+<p>那么当前影响是：$\forall i \in [r, n], f(i) \gets f(i) - k$，$\forall i \in [l, n], g(i) \gets g(i) - k$。</p>
+<p>由于仍要满足上面的那个式子，此时需要讨论几种 $i, j$ 取值情况，综合得到对 $k$ 的限制。</p>
+<p>易知只有 $i \in [0, l - 1], j \in [r, n]$ 这部分根据 $k$ 的取值有可能变化。于是列出不等式：</p>
+<p>$$<br>\forall i \in [0, l - 1], j \in [r, n], f(j) - g(i) - k \ge 0<br>$$</p>
+<p>易得需满足 $k \le \min \limits_{j = r} ^n f(j) - \max \limits_{i = 0} ^{l - 1} g(i)$。显然取等号最优。</p>
+<p>因为每次把那些剩下的右部节点直接删除，那么每次做完之后均为完全匹配，所以上述讨论一直成立。</p>
+<p>于是用线段树维护 $f, g$ 即可，区间加和区间询问 $\min / \max$，$O(n \log n)$。</p>
+<h1 id="Code"><a href="#Code" class="headerlink" title="Code"></a>Code</h1><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**********************************************************</span></span><br><span class="line"><span class="comment"> * Author        : EndSaH</span></span><br><span class="line"><span class="comment"> * Email         : hjxhb1@gmail.com</span></span><br><span class="line"><span class="comment"> * Created Time  : 2019-09-01 21:35</span></span><br><span class="line"><span class="comment"> * FileName      : wib.cpp</span></span><br><span class="line"><span class="comment"> * Website       : https://endsah.cf</span></span><br><span class="line"><span class="comment"> * *******************************************************/</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;cstdio&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;cctype&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">long</span> <span class="keyword">long</span> LL;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> debug(...) fprintf(stderr, __VA_ARGS__)</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> Debug(s) debug(<span class="meta-string">"The message in line %d, Function %s: %s\n"</span>, __LINE__, __FUNCTION__, s)</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> getchar() (ipos == iend and (iend = (ipos = _ibuf) + fread(_ibuf, 1, __bufsize, stdin), ipos == iend) ? EOF : *ipos++)</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> putchar(ch) (opos == oend ? fwrite(_obuf, 1, __bufsize, stdout), opos = _obuf : 0, *opos++ = (ch))</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> __bufsize (1 &lt;&lt; 21 | 1)</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">char</span> _ibuf[__bufsize], _obuf[__bufsize], _stk[<span class="number">50</span>];</span><br><span class="line"><span class="keyword">char</span> *ipos = _ibuf, *iend = _ibuf, *opos = _obuf, *oend = _obuf + __bufsize, *stkpos = _stk;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">END</span></span></span><br><span class="line"><span class="class">&#123;</span> ~END() &#123; fwrite(_obuf, <span class="number">1</span>, opos - _obuf, <span class="built_in">stdout</span>); &#125; &#125;</span><br><span class="line">__;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">inline</span> <span class="keyword">int</span> <span class="title">read</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">register</span> <span class="keyword">int</span> x = <span class="number">0</span>, flag = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">register</span> <span class="keyword">char</span> ch;</span><br><span class="line">    <span class="keyword">while</span> (!<span class="built_in">isdigit</span>(ch = getchar()))</span><br><span class="line">        <span class="keyword">if</span> (ch == <span class="string">'-'</span>)</span><br><span class="line">            flag = <span class="number">-1</span>;</span><br><span class="line">    <span class="keyword">while</span> (x = (x &lt;&lt; <span class="number">3</span>) + (x &lt;&lt; <span class="number">1</span>) + (ch &amp; <span class="number">15</span>), <span class="built_in">isdigit</span>(ch = getchar()));</span><br><span class="line">    <span class="keyword">return</span> x * flag;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> _INT&gt;</span><br><span class="line"><span class="function"><span class="keyword">inline</span> <span class="keyword">void</span> <span class="title">write</span><span class="params">(_INT x)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (x &lt; <span class="number">0</span>)</span><br><span class="line">        <span class="built_in">putchar</span>(<span class="string">'-'</span>), x = -x;</span><br><span class="line">    <span class="keyword">while</span> (*++stkpos = x % <span class="number">10</span> ^ <span class="number">48</span>, x /= <span class="number">10</span>, x);</span><br><span class="line">    <span class="keyword">while</span> (stkpos != _stk)</span><br><span class="line">        <span class="built_in">putchar</span>(*stkpos--);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> _Tp&gt;</span><br><span class="line"><span class="function"><span class="keyword">inline</span> <span class="keyword">bool</span> <span class="title">Chkmax</span><span class="params">(_Tp&amp; x, <span class="keyword">const</span> _Tp&amp; y)</span></span></span><br><span class="line"><span class="function"></span>&#123; <span class="keyword">return</span> x &lt; y ? x = y, <span class="literal">true</span> : <span class="literal">false</span>; &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> _Tp&gt;</span><br><span class="line"><span class="function"><span class="keyword">inline</span> <span class="keyword">bool</span> <span class="title">Chkmin</span><span class="params">(_Tp&amp; x, <span class="keyword">const</span> _Tp&amp; y)</span></span></span><br><span class="line"><span class="function"></span>&#123; <span class="keyword">return</span> x &gt; y ? x = y, <span class="literal">true</span> : <span class="literal">false</span>; &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> maxN = <span class="number">4e4</span> + <span class="number">2</span>;</span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> INF = <span class="number">0x3F3F3F3F</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> n, m;</span><br><span class="line"><span class="keyword">int</span> a[maxN], K[maxN];</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> SEG</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">Node</span>* <span class="title">ptr</span>;</span></span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">Node</span></span></span><br><span class="line"><span class="class">    &#123;</span></span><br><span class="line">        <span class="keyword">int</span> l, r;</span><br><span class="line">        <span class="keyword">int</span> val, tag;</span><br><span class="line">        ptr lson, rson;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">void</span>* <span class="keyword">operator</span> <span class="title">new</span><span class="params">(<span class="keyword">size_t</span> size)</span></span></span><br><span class="line"><span class="function">        </span>&#123;</span><br><span class="line">            <span class="keyword">static</span> <span class="keyword">char</span> buf[<span class="keyword">int</span>(<span class="number">1e8</span>)], *p = buf;</span><br><span class="line">            <span class="keyword">return</span> (p += size) - size;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        Node() &#123; &#125;</span><br><span class="line"></span><br><span class="line">        Node(<span class="keyword">int</span> _l, <span class="keyword">int</span> _r) : l(_l), r(_r)</span><br><span class="line">        &#123; tag = <span class="number">0</span>; &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">void</span> <span class="title">Add</span><span class="params">(<span class="keyword">int</span> addval)</span></span></span><br><span class="line"><span class="function">        </span>&#123; <span class="keyword">this</span>-&gt;tag += addval, <span class="keyword">this</span>-&gt;val += addval; &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">void</span> <span class="title">Pushup_min</span><span class="params">()</span></span></span><br><span class="line"><span class="function">        </span>&#123; Chkmin(<span class="keyword">this</span>-&gt;val = <span class="keyword">this</span>-&gt;lson-&gt;val, <span class="keyword">this</span>-&gt;rson-&gt;val); &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">void</span> <span class="title">Pushup_max</span><span class="params">()</span></span></span><br><span class="line"><span class="function">        </span>&#123; Chkmax(<span class="keyword">this</span>-&gt;val = <span class="keyword">this</span>-&gt;lson-&gt;val, <span class="keyword">this</span>-&gt;rson-&gt;val); &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">void</span> <span class="title">Pushdown</span><span class="params">()</span></span></span><br><span class="line"><span class="function">        </span>&#123;</span><br><span class="line">            <span class="keyword">if</span> (<span class="keyword">this</span>-&gt;tag)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">this</span>-&gt;lson-&gt;Add(<span class="keyword">this</span>-&gt;tag);</span><br><span class="line">                <span class="keyword">this</span>-&gt;rson-&gt;Add(<span class="keyword">this</span>-&gt;tag);</span><br><span class="line">                <span class="keyword">this</span>-&gt;tag = <span class="number">0</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">int</span> fg; <span class="comment">// flag / f and g ? whatever</span></span><br><span class="line">    ptr f, g;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">Build</span><span class="params">(<span class="keyword">int</span> l, <span class="keyword">int</span> r, ptr&amp; cur)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        cur = <span class="keyword">new</span> Node(l, r);</span><br><span class="line">        <span class="keyword">if</span> (l == r)</span><br><span class="line">        &#123;</span><br><span class="line">            cur-&gt;val = a[l];</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">int</span> mid = (l + r) &gt;&gt; <span class="number">1</span>;</span><br><span class="line">        Build(l, mid, cur-&gt;lson), Build(mid + <span class="number">1</span>, r, cur-&gt;rson);</span><br><span class="line">        fg ? cur-&gt;Pushup_max() : cur-&gt;Pushup_min();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">Add</span><span class="params">(<span class="keyword">int</span> ql, <span class="keyword">int</span> qr, <span class="keyword">int</span> addval, ptr cur)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (ql &lt;= cur-&gt;l <span class="keyword">and</span> cur-&gt;r &lt;= qr)</span><br><span class="line">        &#123;</span><br><span class="line">            cur-&gt;Add(addval);</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">int</span> mid = (cur-&gt;l + cur-&gt;r) &gt;&gt; <span class="number">1</span>;</span><br><span class="line">        cur-&gt;Pushdown();</span><br><span class="line">        <span class="keyword">if</span> (ql &lt;= mid)</span><br><span class="line">            Add(ql, qr, addval, cur-&gt;lson);</span><br><span class="line">        <span class="keyword">if</span> (mid &lt; qr)</span><br><span class="line">            Add(ql, qr, addval, cur-&gt;rson);</span><br><span class="line">        fg ? cur-&gt;Pushup_max() : cur-&gt;Pushup_min();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">Query</span><span class="params">(<span class="keyword">int</span> ql, <span class="keyword">int</span> qr, ptr cur)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (ql &lt;= cur-&gt;l <span class="keyword">and</span> cur-&gt;r &lt;= qr)</span><br><span class="line">            <span class="keyword">return</span> cur-&gt;val;</span><br><span class="line">        <span class="keyword">int</span> mid = (cur-&gt;l + cur-&gt;r) &gt;&gt; <span class="number">1</span>;</span><br><span class="line">        cur-&gt;Pushdown();</span><br><span class="line">        <span class="keyword">int</span> res = fg ? -INF : INF;</span><br><span class="line">        <span class="keyword">if</span> (ql &lt;= mid)</span><br><span class="line">            fg ? Chkmax(res, Query(ql, qr, cur-&gt;lson))</span><br><span class="line">                : Chkmin(res, Query(ql, qr, cur-&gt;lson));</span><br><span class="line">        <span class="keyword">if</span> (mid &lt; qr)</span><br><span class="line">            fg ? Chkmax(res, Query(ql, qr, cur-&gt;rson))</span><br><span class="line">                : Chkmin(res, Query(ql, qr, cur-&gt;rson));</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">ifndef</span> ONLINE_JUDGE</span></span><br><span class="line">    freopen(<span class="string">"wib.in"</span>, <span class="string">"r"</span>, <span class="built_in">stdin</span>);</span><br><span class="line">    freopen(<span class="string">"wib.out"</span>, <span class="string">"w"</span>, <span class="built_in">stdout</span>);</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line">    n = read();</span><br><span class="line">    <span class="keyword">int</span> x = read(), y = read(), z = read(), P = read();</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= n; ++i)</span><br><span class="line">        a[i] = (LL(i - x) * (i - x) + (i - y) * (i - y) + (i - z) * (i - z)) % P;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= n; ++i)</span><br><span class="line">        a[i] += a[i - <span class="number">1</span>];</span><br><span class="line">    m = read();</span><br><span class="line">    K[<span class="number">1</span>] = read(), K[<span class="number">2</span>] = read(), x = read(), y = read(), z = read(), P = read();</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">3</span>; i &lt;= m; ++i)</span><br><span class="line">        K[i] = ((LL)x * K[i - <span class="number">1</span>] + (LL)y * K[i - <span class="number">2</span>] + z) % P;</span><br><span class="line">    SEG::fg = <span class="number">0</span>, SEG::Build(<span class="number">1</span>, n, SEG::f);</span><br><span class="line">    SEG::fg = <span class="number">1</span>, SEG::Build(<span class="number">0</span>, n, SEG::g);</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= m; ++i)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">int</span> k = <span class="number">0</span>, l = read(), r = read();</span><br><span class="line">        SEG::fg = <span class="number">0</span>, k += SEG::Query(r, n, SEG::f);</span><br><span class="line">        SEG::fg = <span class="number">1</span>, k -= SEG::Query(<span class="number">0</span>, l - <span class="number">1</span>, SEG::g);</span><br><span class="line">        Chkmin(k, K[i]);</span><br><span class="line">        write(k), <span class="built_in">putchar</span>(<span class="string">'\n'</span>);</span><br><span class="line">        SEG::fg = <span class="number">0</span>, SEG::Add(r, n, -k, SEG::f);</span><br><span class="line">        SEG::fg = <span class="number">1</span>, SEG::Add(l, n, -k, SEG::g);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+    </div>
+
+    
+    
+    
+        
+      
+
+      <footer class="post-footer">
+          
+            
+          
+          <div class="post-tags">
+            
+              <a href="/tags/线段树/" rel="tag"><i class="fa fa-tags"></i> 线段树</a>
+            
+              <a href="/tags/Hall-定理/" rel="tag"><i class="fa fa-tags"></i> Hall 定理</a>
+            
+          </div>
+        
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/blog/comet64D-系统设计/" rel="next" title="[comet64D]系统设计">
+                  <i class="fa fa-chevron-left"></i> [comet64D]系统设计
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+                <a href="/blog/莫比乌斯反演题解汇总/" rel="prev" title="莫比乌斯反演题解汇总">
+                  莫比乌斯反演题解汇总 <i class="fa fa-chevron-right"></i>
+                </a>
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+    
+    <div class="comments" id="gitalk-container"></div>
+  
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+        
+        
+        
+        
+      
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Description"><span class="nav-number">1.</span> <span class="nav-text">Description</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Solution"><span class="nav-number">2.</span> <span class="nav-text">Solution</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Code"><span class="nav-number">3.</span> <span class="nav-text">Code</span></a></li></ol></div>
+        
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image"
+      src="https://s2.ax1x.com/2020/01/17/lz1STs.png"
+      alt="EndSaH">
+  <p class="site-author-name" itemprop="name">EndSaH</p>
+  <div class="site-description" itemprop="description">Personal blog.</div>
+</div>
+  <nav class="site-state motion-element">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">35</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+          
+            <a href="/categories/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+          
+            <a href="/tags/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">40</span>
+        <span class="site-state-item-name">标签</span>
+        </a>
+      </div>
+    
+  </nav>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://github.com/EndSaH" title="GitHub &rarr; https://github.com/EndSaH" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://www.zhihu.com/people/endsah" title="知乎 &rarr; https://www.zhihu.com/people/endsah" rel="noopener" target="_blank"><i class="fa fa-fw fa-comment"></i>知乎</a>
+      </span>
+    
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title">
+      <i class="fa fa-fw fa-link"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://www.cnblogs.com/cnyali-Tea/" title="https://www.cnblogs.com/cnyali-Tea/" rel="noopener" target="_blank">Tea</a>
+        </li>
+      
+        <li class="links-of-blogroll-item">
+          <a href="https://gongchen618.gitee.io/blog/" title="https://gongchen618.gitee.io/blog/" rel="noopener" target="_blank">GC</a>
+        </li>
+      
+        <li class="links-of-blogroll-item">
+          <a href="https://www.cnblogs.com/Qrsikno/" title="https://www.cnblogs.com/Qrsikno/" rel="noopener" target="_blank">Qrsikno</a>
+        </li>
+      
+        <li class="links-of-blogroll-item">
+          <a href="https://www.cnblogs.com/xunzhen/" title="https://www.cnblogs.com/xunzhen/" rel="noopener" target="_blank">Xunzhen</a>
+        </li>
+      
+        <li class="links-of-blogroll-item">
+          <a href="https://hk-cnyali.com/" title="https://hk-cnyali.com/" rel="noopener" target="_blank">HK</a>
+        </li>
+      
+        <li class="links-of-blogroll-item">
+          <a href="http://oi.ender-zzm.pro/" title="http://oi.ender-zzm.pro/" rel="noopener" target="_blank">Ender_zzm</a>
+        </li>
+      
+    </ul>
+  </div>
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+      
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2019 – <span itemprop="copyrightYear">2020</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-chrome"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">EndSaH</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0</div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.3.0</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-user"></i>
+    </span>
+    <span class="site-uv" title="总访客量">
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+    <span class="post-meta-divider">|</span>
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-eye"></i>
+    </span>
+    <span class="site-pv" title="总访问量">
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+
+
+  <script src="/lib/anime.min.js?v=3.1.0"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+<script src="/js/utils.js?v=7.3.0"></script><script src="/js/motion.js?v=7.3.0"></script>
+<script src="/js/schemes/pisces.js?v=7.3.0"></script>
+
+<script src="/js/next-boot.js?v=7.3.0"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+  <script src="/js/local-search.js?v=7.3.0"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+    
+      
+<script type="text/x-mathjax-config">
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') {
+          next = next.nextSibling;
+        }
+        if (next && next.nodeName.toLowerCase() === 'br') {
+          next.parentNode.removeChild(next);
+        }
+      }
+    });
+  });
+
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
+      if (element.nodeName.toLowerCase() == 'li') {
+        element = element.parentNode;
+      }
+      element.classList.add('has-jax');
+    }
+  });
+</script>
+<script>
+  NexT.utils.getScript('//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
+    MathJax.Hub.Typeset();
+  }, window.MathJax);
+</script>
+
+    
+  
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID: '94016d5cd6f01b4f9e29',
+      clientSecret: '949f197123c4eb202cc31a3736b15c5d0490f00a',
+      repo: 'EndSaH.github.io',
+      owner: 'EndSaH',
+      admin: ['EndSaH'],
+      id: 'a43d9826ad4dff31136d64263e447c58',
+        language: 'zh-CN',
+      
+      distractionFreeMode: 'true'
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+</script>
+
+</body>
+</html>

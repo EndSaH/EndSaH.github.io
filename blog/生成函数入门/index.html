@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.3.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/uploads/ic32.png?v=7.3.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/uploads/ic16.png?v=7.3.0">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.3.0" color="#222">
+
+<link rel="stylesheet" href="/css/main.css?v=7.3.0">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.3.0',
+    exturl: false,
+    sidebar: {"position":"right","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":true,"show_result":true,"style":"mac"},
+    back2top: {"enable":true,"sidebar":true,"scrollpercent":true},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="比较严谨的东西就略过了，这里讲的主要是做题要用到的一些技巧。 这里个人认为生成函数的卷积本质上都是枚举了划分，有标号则需要组合数来分配标号（若这些物品本质一样，需要除掉阶乘），无标号不管。">
+<meta name="keywords" content="生成函数,多项式">
+<meta property="og:type" content="article">
+<meta property="og:title" content="生成函数入门">
+<meta property="og:url" content="http://endsah.cf/blog/生成函数入门/index.html">
+<meta property="og:site_name" content="K-D Space">
+<meta property="og:description" content="比较严谨的东西就略过了，这里讲的主要是做题要用到的一些技巧。 这里个人认为生成函数的卷积本质上都是枚举了划分，有标号则需要组合数来分配标号（若这些物品本质一样，需要除掉阶乘），无标号不管。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2020-06-06T06:32:23.725Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="生成函数入门">
+<meta name="twitter:description" content="比较严谨的东西就略过了，这里讲的主要是做题要用到的一些技巧。 这里个人认为生成函数的卷积本质上都是枚举了划分，有标号则需要组合数来分配标号（若这些物品本质一样，需要除掉阶乘），无标号不管。">
+  <link rel="canonical" href="http://endsah.cf/blog/生成函数入门/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>生成函数入门 | K-D Space</title>
+  <meta name="generator" content="Hexo 3.9.0">
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">K-D Space</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">Blog</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-home">
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-about">
+      
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-tags">
+      
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-categories">
+      
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a href="javascript:;" class="popup-trigger">
+        
+          <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+      </li>
+    
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="搜索..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+            
+
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+      <article itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block post">
+    <link itemprop="mainEntityOfPage" href="http://endsah.cf/blog/生成函数入门/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="EndSaH">
+      <meta itemprop="description" content="Personal blog.">
+      <meta itemprop="image" content="https://s2.ax1x.com/2020/01/17/lz1STs.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="K-D Space">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">生成函数入门
+
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2020-06-06 11:54:13 / 修改时间：14:32:23" itemprop="dateCreated datePublished" datetime="2020-06-06T11:54:13+08:00">2020-06-06</time>
+            </span>
+          
+            
+
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/summary/" itemprop="url" rel="index"><span itemprop="name">summary</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            <span class="post-meta-item" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>比较严谨的东西就略过了，这里讲的主要是做题要用到的一些技巧。</p>
+<p>这里个人认为生成函数的卷积本质上都是枚举了划分，有标号则需要组合数来分配标号（若这些物品本质一样，需要除掉阶乘），无标号不管。</p>
+<a id="more"></a>
+
+<h1 id="OGF"><a href="#OGF" class="headerlink" title="OGF"></a>OGF</h1><p>$$<br>A(x) = \sum _{n \ge 0} a _n x ^n \\<br>h _n = \sum _{i = 0} ^n f _i g _{n - i} \Leftrightarrow H(x) = F(x) G(x)<br>$$</p>
+<p>一些常用的表达式：</p>
+<p>$$<br>[x ^m] \frac 1 {(1 - x) ^n} = {n + m - 1 \choose n - 1} \\<br>[x ^m] (1 + x) ^n = {n \choose m} \\<br>\ln (1 + x) = \sum _{n \ge 1} \frac {(-1)^{n+1}} n x ^n<br>$$</p>
+<p>最后一个就是泰勒级数。</p>
+<p>一些需要熟练的操作：</p>
+<ol>
+<li>换元和移项。乘上 $x$ 或者求导积分是移项的两种方法，求导积分会额外带系数。</li>
+<li>爆推式子然后转封闭形式。<del>也就是要直接盯生成函数把封闭形式盯出来</del></li>
+<li>求一些数列的通项。</li>
+</ol>
+<h2 id="付公主的背包"><a href="#付公主的背包" class="headerlink" title="付公主的背包"></a>付公主的背包</h2><blockquote>
+<p>$n$ 个物品，每个物品有无限个，体积为 $v _i \in [1, m]$。</p>
+<p>问总体积分别为 $1, \cdots, m$ 的方案数。</p>
+<p>$n, m \le 10 ^5$</p>
+</blockquote>
+<p>暴力就硬背包，$O(nm)$ 的。</p>
+<p>实际上看到背包就要想到生成函数。玩了一下发现每个物品的生成函数是</p>
+<p>$$<br>\sum _{n \ge 0} \left[ v _i | n \right] x ^n = \frac 1 {1 - x ^{v _i}}<br>$$</p>
+<p>那么做背包相当于把生成函数全部卷积起来，令答案的生成函数为 $A(x)$：</p>
+<p>$$<br>A(x) = \prod _{i = 1} ^n \frac 1 {1 - x^{v _i}}<br>$$</p>
+<p>乘积不好处理，比较套路的想到先取 $\ln$ 再取 $\exp$：</p>
+<p>$$<br>A(x) = \exp \left (\sum _{i = 1} ^n \ln \left (\frac 1 {1 - x ^{v _i}} \right) \right)<br>$$</p>
+<p>回忆一下 $\ln \frac 1 {(1 + t)} = - \ln (1+t)$ 的泰勒展开式，将 $t = (-x) ^{v _i}$ 代入得到</p>
+<p>$$<br>\ln \left (\frac 1 {1 - x ^{v _i}} \right) = \sum _{n \ge 1} [v _i | n] \frac {v _i} n x ^n<br>$$</p>
+<p>注意这里是 $n \ge 1$，因为取 $\ln$ 后常数项变为 $0$。</p>
+<p>推到这里的时侯发现已经可以算了：对于每个 $v _i$ 枚举其倍数去作贡献，可以 $O(n \log n)$ 地得到将 $\ln$ 求和的结果。</p>
+<p>把这个式子 $\exp$ 回去即可，复杂度 $O(n \log n)$。</p>
+<p>整数划分同理，只是物品是满的而已。</p>
+<h2 id="生成树"><a href="#生成树" class="headerlink" title="生成树"></a>生成树</h2><blockquote>
+<p>$n$ 个点的完全图，定义形如 $(i, i + 1)$ 的边为特殊边，以及一个有 $x$ 条特殊边的生成树的权值为 $\varphi (x)$。求所有生成树价值的和。</p>
+<p>$n \le 10 ^6$</p>
+</blockquote>
+<p>先填上特殊边再考虑方案数。</p>
+<p>直接上 $\rm Prufer$ 序的一个定理：</p>
+<ul>
+<li><em>$n$ 个点 $m$ 个连通块的无向图，将这些连通块连通起来的选边的方案数是 $n ^{m - 2} \prod _{i = 1} ^m s _i$，其中 $s _i$ 为第 $i$ 个连通块的大小</em>。</li>
+</ul>
+<p>由于连通块数等于点数减边数，直接枚举连通块数算钦定了 $m$ 个连通块的方案数，最后二项式反演一下就可以了。</p>
+<p>$n ^{m - 2}$ 暂且不管，主要是求后面的 $\prod$ 的部分。</p>
+<p>考虑一个连通块的生成函数为</p>
+<p>$$<br>F(x) = \sum _{n \ge 1} n x ^n = \frac x {(1 - x)^2}<br>$$</p>
+<p><em>这里的连通块指的是连续的区间，所以应当为 OGF</em>。</p>
+<p>$m$ 个连通块相当于是这个函数的 $m$ 次方，于是</p>
+<p>$$<br>[x ^n] \left (F(x)\right) ^m = [x ^n] \frac {x ^m} {(1 - x)^{2m}} = {m + n - 1 \choose 2m - 1}<br>$$</p>
+<p>没了。</p>
+<h2 id="猎人杀"><a href="#猎人杀" class="headerlink" title="猎人杀"></a>猎人杀</h2><blockquote>
+<p>$n$ 个猎人，每个猎人有仇恨值 $w _i$，每个猎人死后，会有 $\dfrac {w _i} {\sum _{\text{j is alive}} {w _j}}$ 的概率打掉猎人 $i$。求 $1$ 号猎人最后死亡的概率。</p>
+<p>$\sum w _i \le 10 ^5$</p>
+</blockquote>
+<p><em>下面可能会用 $w(S)$ 表示 $\sum _{i \in S} w_i$</em>。</p>
+<p>首先要去除打了一个猎人后所带来的概率的后效性。</p>
+<p><strong>上面这个策略打到 $i$ 的概率等价于「不断开枪，可以打死的人，直至打中活的人」这个策略打到 $i$ 的概率</strong>。这是个很重要的转化。</p>
+<p>于是开始转移。先设 $f(S)$ 表示钦定了 $S$ 集合内的人全部晚于 $1$ 号猎人死的概率。答案为 $\sum _{1 \not \in S} (-1) ^{|S|} f(S)$。</p>
+<p>有转移方程（$U$ 指全集）：</p>
+<p>$$<br>f(S) = \frac {w _1} {w(U)} + \frac {w(U) - w(S) - w _1} {w(U)} f(S)<br>$$</p>
+<p>打中 $1$ 结束，打中 $S$ 非法，打中 $S$ 和 $1$ 之外的不变。</p>
+<p>移下项得到<br>$$<br>f(S) = \frac {w _1} {w(S) + w _1}<br>$$</p>
+<p>发现 $f(S)$ 的值只与 $w(S)$ 有关，并且 $w(U) \le 10 ^5$，于是将 $f$ 的定义域改造为整数，重化一下式子，看第 $i$ 个权值对答案产生了多少贡献：</p>
+<p>$$<br>\sum _{i = 1} ^{w(U)} f(i) \sum _{1 \not \in S} (-1) ^{|S|} [w(S) = i]<br>$$</p>
+<p>主要是求后面求和号的值。</p>
+<p>发现暴力可以考虑背包，想起来实际上还有生成函数这么个东西。</p>
+<p>那么每个猎人的生成函数应当是 $1 - x ^{w _i}$，故答案为：</p>
+<p>$$<br>\sum _{i = 1} ^{w(U)} f(i) \left ([x ^i] \prod _{j = 2} ^n (1 - x ^{w _j}) \right)<br>$$</p>
+<p>可以直接分治 NTT（注意不是 CDQ 的，就是普通分治）$O(n \log ^2 n)$；</p>
+<p>也可以类似付公主的背包一样 $O(n \log n)$ 地得到求 $\ln$ 后的式子再 $\exp$ 回去。</p>
+<p><del>当然建议用分治 NTT，考场上写个这个比写个整套板子快多了</del></p>
+<p>实际上分治 NTT 的复杂度为 $O(w(U) \log ^2 w(U))$，而 $\exp$ 的复杂度为 $O(w \log w)$，优秀很多。付公主的背包分治就会复杂度不对。</p>
+<ul>
+<li>日常在多项式预处理时写了个 $n$ 而不是 $w(U)$……要注意这个东西。</li>
+</ul>
+<h1 id="EGF"><a href="#EGF" class="headerlink" title="EGF"></a>EGF</h1><p>$$<br>A(x) = \sum _{n \ge 0} a _n \frac {x ^n} {n!} \\<br>h _n = \sum _{i = 0} ^n {n \choose i} f _i g _{n - i} \Leftrightarrow H(x) = F(x) G(x)<br>$$</p>
+<p>这是个奥妙重重的东西……一般用于有标号的计数中。</p>
+<p>下面那个通常称为二项卷积。</p>
+<p>注意这里积分和求导对应了移项，而乘 $x$ 对应了带系数的移项。</p>
+<p>一些常用的表达形式：</p>
+<p>$$<br>e ^x = \sum _{n \ge 0} \frac {x ^n} {n!} \\<br>\frac{e ^x + e ^{-x}} 2 = \sum _{n \ge 0} \frac {x ^{2n}} {(2n)!} \\<br>\frac{e ^x - e ^{-x}} 2 = \sum _{n \ge 0} \frac {x ^{2n + 1}} {(2n + 1)!}<br>$$</p>
+<h2 id="无向连通图个数"><a href="#无向连通图个数" class="headerlink" title="无向连通图个数"></a>无向连通图个数</h2><p>有几种做法。首先设 $f _n$ 表示 $n$ 个点的无向连通图的个数，$g _n$ 表示无向图的个数，可以知道 $g _n = 2 ^{n(n - 1) / 2}$。</p>
+<p>那么考虑枚举 $1$ 号点所在的连通块的大小，有转移式：<br>$$<br>f _n = g _n - \sum _{i = 1} ^{n - 1} {n - 1 \choose i - 1} f _i g _{n - i}<br>$$<br>常规的分治 NTT 之类的就不提了，这里展示一下生成函数怎么做。</p>
+<p>先把这个减号移到等式右边：<br>$$<br>g _n = \sum _{i = 1} ^{n} {n - 1 \choose i - 1} f _i g _{n - i}<br>$$<br>注意这个能够成立的前提是定义了 $g _0 = 1$。</p>
+<p>然后改变一下 $i$ 的枚举：<br>$$<br>g _n = \sum _{i = 0} ^{n - 1} {n - 1 \choose i} f _{i + 1} g _{n - i - 1}<br>$$<br>发现这和二项卷积已经长得非常像了，但是 $f _{i + 1}$ 和这个 $n - 1$ 特别讨厌……</p>
+<p>这时需要联想到求导相当于左移，而积分相当于右移。那么上面的式子等价于：<br>$$<br>G(x) = \int F’(x) G(x)<br>$$<br>把这个式子拆出来玩一下会发现和上面是符合的。</p>
+<p>接下来就顺理成章：<br>$$<br>G(x) = \int F’(x) G(x) \\<br>G’(x) = F’(x) G(x) \\<br>F’(x) = \frac {G’(x)} {G(x)} \\<br>\int F’(x) = \int \frac {G’(x)} {G(x)} \\<br>F(x) = \ln (G(x))<br>$$<br>然后惊讶地发现求个 $\ln$ 就可以得到 $F(x)$ 了。</p>
+<blockquote>
+<p>有些题也可以得到类似的式子，不过可能需要一些微分方程的基础知识才能解出来表达式；这个式子是最基础的。</p>
+</blockquote>
+<p>上面算是比较严谨的推导，如果要真正考虑到其优美性质，会注意到：<strong>无向图由无向连通图组合而成</strong>。</p>
+<p>那么相当于是<br>$$<br>G(x) = \sum _{m \ge 0} \frac {F^m(x)} {m!}<br>$$<br>相当于是枚举这个图由 $m$ 个连通块构成。然后你会惊奇地发现后面就是 $\exp (F(x))$ 的展开式，于是同样的得到了 $F(x) = \ln (G(x))$。</p>
+<p>硬证明的话，把 $F ^m(x)$ 拆出来看看：<br>$$<br>[x^n] F^m(x) = \sum _{S \text{ is a partition}} {n \choose s _1, s _2, \cdots, s _m} \prod _{i = 1} ^m f _{s _i}<br>$$<br>${n \choose s _1, s _2, \cdots, s _m}$ 是个多元组合数，等于 $\dfrac {n!} {s _1 ! s _2 ! \cdots s _m !}$。乘上这个东西相当于为每个连通图都分配了一个标号和位置。</p>
+<p>但是无向图中，连通图的位置是没有关系的；所以最后要除掉一个 $m!$ 避免算重。</p>
+<h2 id="射命丸文的笔记"><a href="#射命丸文的笔记" class="headerlink" title="射命丸文的笔记"></a>射命丸文的笔记</h2><blockquote>
+<p>求 $n$ 个点的竞赛图的期望哈密顿回路数量。</p>
+<p>$n \le 10 ^5$</p>
+</blockquote>
+<p>首先哈密顿回路总数是好求的：对每条哈密顿回路分开考虑贡献， 发现是 $(n-1)! 2 ^{n(n - 1) / 2 - n}$。一条哈密顿回路肯定对应着一个环排列，环上的边固定方向后其他边可以任选方向。</p>
+<p>于是问题变成了求强连通的竞赛图的数量。</p>
+<p>需要知道一个结论：任意竞赛图缩点之后会得到一条链，链前面的节点向所有后面的节点均有连边，且方向固定。</p>
+<p>所以一个竞赛图也可以看作强连通竞赛图的组合。但是由于是链，这时强连通竞赛图的位置是有意义的；所以<br>$$<br>\begin{aligned}<br>G(x) &amp;= \sum _{m \ge 0} F^m(x) \\<br>&amp;= \frac 1 {1 - F(x)}<br>\end{aligned}<br>$$<br>于是 $F(x) = 1 - \dfrac 1 {G(x)}$。多项式求逆即可。</p>
+<p>用二项卷积的理论也是可以证明的。首先写出转移式：枚举拓扑序最小的强连通分量的大小，其他的点任意连边：<br>$$<br>f _n = g _n - \sum _{i = 1} ^{n - 1} {n \choose i} f _i g _{n - i}<br>$$<br>将 $g _0$ 定义成 $1$，而 $f _0$ 定义成 $0$，移个项：<br>$$<br>g _n = \sum _{i = 0} ^{n} {n \choose i} f _i g _{n - i}<br>$$<br>于是可以得到<br>$$<br>G(x) = F(x) G(x) + 1<br>$$<br>加一个 $1$ 是因为 $f _0 = 0, g _0 = 1$，所以 $F(x)G(x)$ 的常数项会少一个 $1$。（要着重注意这个小问题）</p>
+<p>所以<br>$$<br>F(x) = 1 - \frac 1 {G(x)}<br>$$<br>与前面所推的一致。</p>
+
+    </div>
+
+    
+    
+    
+        
+      
+
+      <footer class="post-footer">
+          
+            
+          
+          <div class="post-tags">
+            
+              <a href="/tags/生成函数/" rel="tag"><i class="fa fa-tags"></i> 生成函数</a>
+            
+              <a href="/tags/多项式/" rel="tag"><i class="fa fa-tags"></i> 多项式</a>
+            
+          </div>
+        
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/blog/HEOI2016-求和/" rel="next" title="[HEOI2016]求和">
+                  <i class="fa fa-chevron-left"></i> [HEOI2016]求和
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+                <a href="/blog/拉格朗日插值法/" rel="prev" title="拉格朗日插值法">
+                  拉格朗日插值法 <i class="fa fa-chevron-right"></i>
+                </a>
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+    
+    <div class="comments" id="gitalk-container"></div>
+  
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+        
+        
+        
+        
+      
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#OGF"><span class="nav-number">1.</span> <span class="nav-text">OGF</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#付公主的背包"><span class="nav-number">1.1.</span> <span class="nav-text">付公主的背包</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#生成树"><span class="nav-number">1.2.</span> <span class="nav-text">生成树</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#猎人杀"><span class="nav-number">1.3.</span> <span class="nav-text">猎人杀</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#EGF"><span class="nav-number">2.</span> <span class="nav-text">EGF</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#无向连通图个数"><span class="nav-number">2.1.</span> <span class="nav-text">无向连通图个数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#射命丸文的笔记"><span class="nav-number">2.2.</span> <span class="nav-text">射命丸文的笔记</span></a></li></ol></li></ol></div>
+        
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image"
+      src="https://s2.ax1x.com/2020/01/17/lz1STs.png"
+      alt="EndSaH">
+  <p class="site-author-name" itemprop="name">EndSaH</p>
+  <div class="site-description" itemprop="description">Personal blog.</div>
+</div>
+  <nav class="site-state motion-element">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">35</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+          
+            <a href="/categories/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+          
+            <a href="/tags/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">40</span>
+        <span class="site-state-item-name">标签</span>
+        </a>
+      </div>
+    
+  </nav>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://github.com/EndSaH" title="GitHub &rarr; https://github.com/EndSaH" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://www.zhihu.com/people/endsah" title="知乎 &rarr; https://www.zhihu.com/people/endsah" rel="noopener" target="_blank"><i class="fa fa-fw fa-comment"></i>知乎</a>
+      </span>
+    
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title">
+      <i class="fa fa-fw fa-link"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://www.cnblogs.com/cnyali-Tea/" title="https://www.cnblogs.com/cnyali-Tea/" rel="noopener" target="_blank">Tea</a>
+        </li>
+      
+        <li class="links-of-blogroll-item">
+          <a href="https://gongchen618.gitee.io/blog/" title="https://gongchen618.gitee.io/blog/" rel="noopener" target="_blank">GC</a>
+        </li>
+      
+        <li class="links-of-blogroll-item">
+          <a href="https://www.cnblogs.com/Qrsikno/" title="https://www.cnblogs.com/Qrsikno/" rel="noopener" target="_blank">Qrsikno</a>
+        </li>
+      
+        <li class="links-of-blogroll-item">
+          <a href="https://www.cnblogs.com/xunzhen/" title="https://www.cnblogs.com/xunzhen/" rel="noopener" target="_blank">Xunzhen</a>
+        </li>
+      
+        <li class="links-of-blogroll-item">
+          <a href="https://hk-cnyali.com/" title="https://hk-cnyali.com/" rel="noopener" target="_blank">HK</a>
+        </li>
+      
+        <li class="links-of-blogroll-item">
+          <a href="http://oi.ender-zzm.pro/" title="http://oi.ender-zzm.pro/" rel="noopener" target="_blank">Ender_zzm</a>
+        </li>
+      
+    </ul>
+  </div>
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+      
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2019 – <span itemprop="copyrightYear">2020</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-chrome"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">EndSaH</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0</div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.3.0</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-user"></i>
+    </span>
+    <span class="site-uv" title="总访客量">
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+    <span class="post-meta-divider">|</span>
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-eye"></i>
+    </span>
+    <span class="site-pv" title="总访问量">
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+
+
+  <script src="/lib/anime.min.js?v=3.1.0"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+<script src="/js/utils.js?v=7.3.0"></script><script src="/js/motion.js?v=7.3.0"></script>
+<script src="/js/schemes/pisces.js?v=7.3.0"></script>
+
+<script src="/js/next-boot.js?v=7.3.0"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+  <script src="/js/local-search.js?v=7.3.0"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+    
+      
+<script type="text/x-mathjax-config">
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') {
+          next = next.nextSibling;
+        }
+        if (next && next.nodeName.toLowerCase() === 'br') {
+          next.parentNode.removeChild(next);
+        }
+      }
+    });
+  });
+
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
+      if (element.nodeName.toLowerCase() == 'li') {
+        element = element.parentNode;
+      }
+      element.classList.add('has-jax');
+    }
+  });
+</script>
+<script>
+  NexT.utils.getScript('//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
+    MathJax.Hub.Typeset();
+  }, window.MathJax);
+</script>
+
+    
+  
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID: '94016d5cd6f01b4f9e29',
+      clientSecret: '949f197123c4eb202cc31a3736b15c5d0490f00a',
+      repo: 'EndSaH.github.io',
+      owner: 'EndSaH',
+      admin: ['EndSaH'],
+      id: '6fb92c080d0f6fff469ebfdce8c0395e',
+        language: 'zh-CN',
+      
+      distractionFreeMode: 'true'
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+</script>
+
+</body>
+</html>
