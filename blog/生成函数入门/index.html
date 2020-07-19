@@ -56,14 +56,14 @@
 </script>
 
   <meta name="description" content="比较严谨的东西就略过了，这里讲的主要是做题要用到的一些技巧。 这里个人认为生成函数的卷积本质上都是枚举了划分，有标号则需要组合数来分配标号（若这些物品本质一样，需要除掉阶乘），无标号不管。">
-<meta name="keywords" content="多项式,生成函数">
+<meta name="keywords" content="生成函数,多项式">
 <meta property="og:type" content="article">
 <meta property="og:title" content="生成函数入门">
 <meta property="og:url" content="http://endsah.cf/blog/生成函数入门/index.html">
 <meta property="og:site_name" content="K-D Space">
 <meta property="og:description" content="比较严谨的东西就略过了，这里讲的主要是做题要用到的一些技巧。 这里个人认为生成函数的卷积本质上都是枚举了划分，有标号则需要组合数来分配标号（若这些物品本质一样，需要除掉阶乘），无标号不管。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2020-07-19T01:39:38.235Z">
+<meta property="og:updated_time" content="2020-07-19T01:41:14.666Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="生成函数入门">
 <meta name="twitter:description" content="比较严谨的东西就略过了，这里讲的主要是做题要用到的一些技巧。 这里个人认为生成函数的卷积本质上都是枚举了划分，有标号则需要组合数来分配标号（若这些物品本质一样，需要除掉阶乘），无标号不管。">
@@ -294,7 +294,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-07-19 09:39:38" itemprop="dateModified" datetime="2020-07-19T09:39:38+08:00">2020-07-19</time>
+                <time title="修改时间：2020-07-19 09:41:14" itemprop="dateModified" datetime="2020-07-19T09:41:14+08:00">2020-07-19</time>
               </span>
             
           
@@ -335,9 +335,9 @@
 <p>这里个人认为生成函数的卷积本质上都是枚举了划分，有标号则需要组合数来分配标号（若这些物品本质一样，需要除掉阶乘），无标号不管。</p>
 <a id="more"></a>
 
-<h1 id="OGF"><a href="#OGF" class="headerlink" title="OGF"></a>OGF</h1><p>$$<br>A(x) = \sum _{n \ge 0} a _n x ^n \<br>h _n = \sum _{i = 0} ^n f _i g _{n - i} \Leftrightarrow H(x) = F(x) G(x)<br>$$</p>
+<h1 id="OGF"><a href="#OGF" class="headerlink" title="OGF"></a>OGF</h1><p>$$<br>A(x) = \sum _{n \ge 0} a _n x ^n \\<br>h _n = \sum _{i = 0} ^n f _i g _{n - i} \Leftrightarrow H(x) = F(x) G(x)<br>$$</p>
 <p>一些常用的表达式：</p>
-<p>$$<br>[x ^m] \frac 1 {(1 - x) ^n} = {n + m - 1 \choose n - 1} \<br>[x ^m] (1 + x) ^n = {n \choose m} \<br>\ln (1 + x) = \sum _{n \ge 1} \frac {(-1)^{n+1}} n x ^n<br>$$</p>
+<p>$$<br>[x ^m] \frac 1 {(1 - x) ^n} = {n + m - 1 \choose n - 1} \\<br>[x ^m] (1 + x) ^n = {n \choose m} \\<br>\ln (1 + x) = \sum _{n \ge 1} \frac {(-1)^{n+1}} n x ^n<br>$$</p>
 <p>最后一个就是泰勒级数。</p>
 <p>一些需要熟练的操作：</p>
 <ol>
@@ -405,18 +405,18 @@
 <ul>
 <li>日常在多项式预处理时写了个 $n$ 而不是 $w(U)$……要注意这个东西。</li>
 </ul>
-<h1 id="EGF"><a href="#EGF" class="headerlink" title="EGF"></a>EGF</h1><p>$$<br>A(x) = \sum _{n \ge 0} a _n \frac {x ^n} {n!} \<br>h _n = \sum _{i = 0} ^n {n \choose i} f _i g _{n - i} \Leftrightarrow H(x) = F(x) G(x)<br>$$</p>
+<h1 id="EGF"><a href="#EGF" class="headerlink" title="EGF"></a>EGF</h1><p>$$<br>A(x) = \sum _{n \ge 0} a _n \frac {x ^n} {n!} \\<br>h _n = \sum _{i = 0} ^n {n \choose i} f _i g _{n - i} \Leftrightarrow H(x) = F(x) G(x)<br>$$</p>
 <p>这是个奥妙重重的东西……一般用于有标号的计数中。</p>
 <p>下面那个通常称为二项卷积。</p>
 <p>注意这里积分和求导对应了移项，而乘 $x$ 对应了带系数的移项。</p>
 <p>一些常用的表达形式：</p>
-<p>$$<br>e ^x = \sum _{n \ge 0} \frac {x ^n} {n!} \<br>\frac{e ^x + e ^{-x}} 2 = \sum _{n \ge 0} \frac {x ^{2n}} {(2n)!} \<br>\frac{e ^x - e ^{-x}} 2 = \sum _{n \ge 0} \frac {x ^{2n + 1}} {(2n + 1)!}<br>$$</p>
+<p>$$<br>e ^x = \sum _{n \ge 0} \frac {x ^n} {n!} \\<br>\frac{e ^x + e ^{-x}} 2 = \sum _{n \ge 0} \frac {x ^{2n}} {(2n)!} \\<br>\frac{e ^x - e ^{-x}} 2 = \sum _{n \ge 0} \frac {x ^{2n + 1}} {(2n + 1)!}<br>$$</p>
 <h2 id="无向连通图个数"><a href="#无向连通图个数" class="headerlink" title="无向连通图个数"></a>无向连通图个数</h2><p>有几种做法。首先设 $f _n$ 表示 $n$ 个点的无向连通图的个数，$g _n$ 表示无向图的个数，可以知道 $g _n = 2 ^{n(n - 1) / 2}$。</p>
 <p>那么考虑枚举 $1$ 号点所在的连通块的大小，有转移式：<br>$$<br>f _n = g _n - \sum _{i = 1} ^{n - 1} {n - 1 \choose i - 1} f _i g _{n - i}<br>$$<br>常规的分治 NTT 之类的就不提了，这里展示一下生成函数怎么做。</p>
 <p>先把这个减号移到等式右边：<br>$$<br>g _n = \sum _{i = 1} ^{n} {n - 1 \choose i - 1} f _i g _{n - i}<br>$$<br>注意这个能够成立的前提是定义了 $g _0 = 1$。</p>
 <p>然后改变一下 $i$ 的枚举：<br>$$<br>g _n = \sum _{i = 0} ^{n - 1} {n - 1 \choose i} f _{i + 1} g _{n - i - 1}<br>$$<br>发现这和二项卷积已经长得非常像了，但是 $f _{i + 1}$ 和这个 $n - 1$ 特别讨厌……</p>
 <p>这时需要联想到求导相当于左移，而积分相当于右移。那么上面的式子等价于：<br>$$<br>G(x) = \int F’(x) G(x)<br>$$<br>把这个式子拆出来玩一下会发现和上面是符合的。</p>
-<p>接下来就顺理成章：<br>$$<br>G(x) = \int F’(x) G(x) \<br>G’(x) = F’(x) G(x) \<br>F’(x) = \frac {G’(x)} {G(x)} \<br>\int F’(x) = \int \frac {G’(x)} {G(x)} \<br>F(x) = \ln (G(x))<br>$$<br>然后惊讶地发现求个 $\ln$ 就可以得到 $F(x)$ 了。</p>
+<p>接下来就顺理成章：<br>$$<br>G(x) = \int F’(x) G(x) \\<br>G’(x) = F’(x) G(x) \\<br>F’(x) = \frac {G’(x)} {G(x)} \\<br>\int F’(x) = \int \frac {G’(x)} {G(x)} \\<br>F(x) = \ln (G(x))<br>$$<br>然后惊讶地发现求个 $\ln$ 就可以得到 $F(x)$ 了。</p>
 <blockquote>
 <p>有些题也可以得到类似的式子，不过可能需要一些微分方程的基础知识才能解出来表达式；这个式子是最基础的。</p>
 </blockquote>
@@ -431,7 +431,7 @@
 <p>首先哈密顿回路总数是好求的：对每条哈密顿回路分开考虑贡献， 发现是 $(n-1)! 2 ^{n(n - 1) / 2 - n}$。一条哈密顿回路肯定对应着一个环排列，环上的边固定方向后其他边可以任选方向。</p>
 <p>于是问题变成了求强连通的竞赛图的数量。</p>
 <p>需要知道一个结论：任意竞赛图缩点之后会得到一条链，链前面的节点向所有后面的节点均有连边，且方向固定。</p>
-<p>所以一个竞赛图也可以看作强连通竞赛图的组合。但是由于是链，这时强连通竞赛图的位置是有意义的；所以<br>$$<br>\begin{aligned}<br>G(x) &amp;= \sum _{m \ge 0} F^m(x) \<br>&amp;= \frac 1 {1 - F(x)}<br>\end{aligned}<br>$$<br>于是 $F(x) = 1 - \dfrac 1 {G(x)}$。多项式求逆即可。</p>
+<p>所以一个竞赛图也可以看作强连通竞赛图的组合。但是由于是链，这时强连通竞赛图的位置是有意义的；所以<br>$$<br>\begin{aligned}<br>G(x) &amp;= \sum _{m \ge 0} F^m(x) \\<br>&amp;= \frac 1 {1 - F(x)}<br>\end{aligned}<br>$$<br>于是 $F(x) = 1 - \dfrac 1 {G(x)}$。多项式求逆即可。</p>
 <p>用二项卷积的理论也是可以证明的。首先写出转移式：枚举拓扑序最小的强连通分量的大小，其他的点任意连边：<br>$$<br>f _n = g _n - \sum _{i = 1} ^{n - 1} {n \choose i} f _i g _{n - i}<br>$$<br>将 $g _0$ 定义成 $1$，而 $f _0$ 定义成 $0$，移个项：<br>$$<br>g _n = \sum _{i = 0} ^{n} {n \choose i} f _i g _{n - i}<br>$$<br>于是可以得到<br>$$<br>G(x) = F(x) G(x) + 1<br>$$<br>加一个 $1$ 是因为 $f _0 = 0, g _0 = 1$，所以 $F(x)G(x)$ 的常数项会少一个 $1$。（要着重注意这个小问题）</p>
 <p>所以<br>$$<br>F(x) = 1 - \frac 1 {G(x)}<br>$$<br>与前面所推的一致。</p>
 <h2 id="如何优雅的求和"><a href="#如何优雅的求和" class="headerlink" title="如何优雅的求和"></a>如何优雅的求和</h2><p>求<br>$$<br>\sum _{k = 0} ^n f(k) {n \choose k} c ^k (1-c) ^{n - k}<br>$$<br>其中 $f$ 是一个 $m$ 次多项式，输入给出了 $f$ 函数 $0, 1, \cdots, m$ 的点值。$n \le 10 ^9, m \le 10 ^5$。</p>
@@ -454,9 +454,9 @@
           
           <div class="post-tags">
             
-              <a href="/tags/多项式/" rel="tag"><i class="fa fa-tags"></i> 多项式</a>
-            
               <a href="/tags/生成函数/" rel="tag"><i class="fa fa-tags"></i> 生成函数</a>
+            
+              <a href="/tags/多项式/" rel="tag"><i class="fa fa-tags"></i> 多项式</a>
             
           </div>
         
